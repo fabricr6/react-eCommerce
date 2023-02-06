@@ -1,12 +1,10 @@
 import { initializeApp } from 'firebase/app';
-
 import {
   getAuth,
   signInWithRedirect,
   signInWithPopup,
-  googleProvider,
-} from 'firebase';
-
+  GoogleAuthProvider,
+} from 'firebase/auth';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -23,12 +21,19 @@ const firebaseConfig = {
 
     const firebaseApp = initializeApp(firebaseConfig);
 
-    let provider = new googleProvider()
+    const provider = new GoogleAuthProvider();
     
     provider.setCustomParameters({
       prompt: 'select_account',
     });
     
-    
-    export const auth = getAuth();
+
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+
+  console.log(userAuth);
+};
+
+export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+    
