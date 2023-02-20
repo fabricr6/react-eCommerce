@@ -5,6 +5,12 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from 'firebase/auth';
+import{
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+} from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -31,9 +37,42 @@ const firebaseConfig = {
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
-  console.log(userAuth);
 };
 
 export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
     
+export const db = getFirestore();
+
+export const createUserDocumentFromAuth = async (userAuth) => {
+  const UserDocRef = doc(db, 'users', userAuth.uid);
+
+  console.log(UserDocRef);
+
+  const userSnapchot = await getDoc(UserDocRef);
+  console.log(userSnapchot);
+  console.log(userSnapchot.exists());
+
+  if(!userSnapchot.exists()){
+
+    const {displayName, email} = userAuth;
+    const createdAt = new Date(); 
+
+    try{
+      await setDoc(UserDocRef ,{
+        displayName,
+        email,
+        createdAt
+      })
+    }catch(error){
+        console.log('error ',error.message)
+    }  
+
+  }
+
+    return UserDocRef;
+
+  //if user data exist
+
+  //return userDocRef
+};
